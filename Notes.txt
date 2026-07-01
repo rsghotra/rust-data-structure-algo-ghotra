@@ -1,0 +1,70 @@
+Topic#1: take() vs as_ref() vs as_mut() vs clone()
+
+take() => when you moves ownership and take control
+   Ex: let old = self.head.take()
+       Before:
+       self.head
+       |
+       v
+       Some(Node)
+       After:
+       old
+       |
+       v
+       Some(Node)
+       self.head = None
+
+as_ref() => when you take immutable borrow to read values
+    Ex: let new_ref = self.head.as_ref();
+        Before:
+        self.head
+        |
+        v
+        Some(Node)
+        After:
+        self.head
+        |
+        v
+        Some(Node)
+        |
+        v
+        new_ref
+
+as_mut() => when you take mutable borrow without taking ownership
+    Ex: let head = self.head.as_mut();   //Option<&mut Box<Node<T>>
+        if let Some(node) = self.head.as_mut() {
+            node.value = 100;
+        }
+        Before:
+        10 -> 20 -> 30
+        After
+        100 -> 20 -> 30
+        //as_mut() will be used methods like push_back(), insert(), reverse(), remove(), append()
+
+clone() => Copies(if possible) -> two owned valued(assuming type implements Copy)
+    Ex: let copy = self.head.clone();
+        Before:
+        self.head
+        |
+        v
+        Some(Node)
+        After:
+        self.head    copy
+        |            |
+        v            v
+        Some(Node)   Some(Node)
+        
+
+
+Topic#2: How unwrap behaves?
+Option<i32>          -> unwrap() -> i32
+
+Option<String>       -> unwrap() -> String
+
+Option<&Node>        -> unwrap() -> &Node
+
+Option<&mut Node>    -> unwrap() -> &mut Node
+
+Option<Box<Node>>    -> unwrap() -> Box<Node>
+
+Option<&mut Box<Node>> -> unwrap() -> &mut Box<Node>
